@@ -11,7 +11,6 @@ env:
   DOTNET_VERSION: "10.0.x"
   # Path to your solution or project; leave empty if there is a single one in the repo root
   PROJECT_PATH: ""
-  AZURE_WEBAPP_NAME: your-webapp-name   # the name created by infrastructure.sh
 
 jobs:
   build:
@@ -46,13 +45,27 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           name: webapp
           path: ./publish
 
+      - name: Read web app name
+        id: app-config
+        shell: bash
+        run: |
+          set -euo pipefail
+          webapp_name="$(sed -n 's/^WEBAPP_NAME=//p' app-config.env)"
+          if [[ -z "$webapp_name" ]]; then
+            echo "WEBAPP_NAME is missing from app-config.env" >&2
+            exit 1
+          fi
+          echo "webapp-name=$webapp_name" >> "$GITHUB_OUTPUT"
+
       - uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          app-name: ${{ steps.app-config.outputs.webapp-name }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./publish

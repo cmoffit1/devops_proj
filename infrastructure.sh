@@ -5,7 +5,8 @@ set -euo pipefail
 RESOURCE_GROUP="devops-proj-rg"
 LOCATION="eastus"
 PLAN_NAME="devops-proj-plan"
-WEBAPP_NAME="devops-proj-app-$RANDOM"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/app-config.env"
 RUNTIME="DOTNETCORE:10.0"   # .NET 10 (LTS); list options: az webapp list-runtimes --os linux
 
 # Resource group
