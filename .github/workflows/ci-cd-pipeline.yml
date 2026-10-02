@@ -53,7 +53,7 @@ jobs:
           path: ./publish
 
       - name: Read web app name
-        id: app-config
+        id: app_config
         shell: bash
         run: |
           set -euo pipefail
@@ -62,10 +62,10 @@ jobs:
             echo "WEBAPP_NAME is missing from app-config.env" >&2
             exit 1
           fi
-          echo "webapp-name=$webapp_name" >> "$GITHUB_OUTPUT"
+          echo "webapp_name=$webapp_name" >> "$GITHUB_OUTPUT"
 
       - uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ steps.app-config.outputs.webapp-name }}
+          app-name: ${{ steps.app_config.outputs.webapp_name }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./publish
