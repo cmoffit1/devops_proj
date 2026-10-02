@@ -9,8 +9,7 @@ on:
 
 env:
   DOTNET_VERSION: "10.0.x"
-  # Path to your solution or project; leave empty if there is a single one in the repo root
-  PROJECT_PATH: ""
+  PROJECT_PATH: "weather-app/WeatherApp.csproj"
 
 jobs:
   build:

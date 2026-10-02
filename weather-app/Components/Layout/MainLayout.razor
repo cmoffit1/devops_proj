@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+
+<div class="app-shell">
+    <header class="site-header">
+        <a class="brand" href="/" aria-label="Weatherly home">
+            <span class="brand-mark" aria-hidden="true">☼</span>
+            <span>weatherly</span>
+        </a>
+        <a class="api-link" href="/api/weatherforecast?city=Seattle" target="_blank" rel="noopener noreferrer">
+            Explore the API <span aria-hidden="true">↗</span>
+        </a>
+    </header>
+    <div class="page-content">
+        @Body
+    </div>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

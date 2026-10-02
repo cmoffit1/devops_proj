@@ -1,0 +1,145 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using WeatherApp.Models
+@using WeatherApp.Services
+@inject IWeatherForecastService WeatherService
+
+<PageTitle>Weatherly | Forecast</PageTitle>
+
+<main class="weather-dashboard">
+    <section class="welcome">
+        <div>
+            <p class="eyebrow">YOUR DAILY FORECAST</p>
+            <h1>Weather, at a glance.</h1>
+            <p class="welcome-copy">A simple forecast for wherever you are.</p>
+        </div>
+
+        <form class="city-search" @onsubmit="Search" @onsubmit:preventDefault>
+            <label for="city">City</label>
+            <div class="search-control">
+                <input id="city"
+                       @bind="searchCity"
+                       @bind:event="oninput"
+                       maxlength="100"
+                       placeholder="Try Seattle or Tokyo"
+                       autocomplete="address-level2" />
+                <button type="submit">Search</button>
+            </div>
+        </form>
+    </section>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <p class="search-error" role="alert">@errorMessage</p>
+    }
+
+    @if (forecast is not null)
+    {
+        <section class="current-weather" aria-label="Current weather">
+            <div class="current-heading">
+                <div>
+                    <p class="eyebrow">WEATHER IN</p>
+                    <h2>@forecast.City</h2>
+                    <p class="current-date">@DateTime.Today.ToString("dddd, MMMM d")</p>
+                </div>
+                <button class="unit-toggle" type="button" @onclick="ToggleUnits">
+                    °@(useFahrenheit ? "F" : "C") <span aria-hidden="true">↔</span> °@(useFahrenheit ? "C" : "F")
+                </button>
+            </div>
+
+            <div class="current-conditions">
+                <span class="weather-symbol" aria-hidden="true">@GetWeatherSymbol(forecast.Days[0].Summary)</span>
+                <div>
+                    <p class="current-temperature">@FormatTemperature(forecast.CurrentTemperatureC)</p>
+                    <p class="condition">@forecast.Days[0].Summary</p>
+                </div>
+                <div class="current-range">
+                    <span>H: @FormatTemperature(forecast.Days[0].HighC)</span>
+                    <span>L: @FormatTemperature(forecast.Days[0].LowC)</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="forecast-section" aria-labelledby="forecast-title">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">PLAN AHEAD</p>
+                    <h2 id="forecast-title">5-day forecast</h2>
+                </div>
+                <span class="demo-label">Sample forecast data</span>
+            </div>
+
+            <div class="forecast-grid">
+                @foreach (var day in forecast.Days)
+                {
+                    <article class="forecast-card">
+                        <h3>@(day.Date == DateOnly.FromDateTime(DateTime.Today) ? "Today" : day.Date.ToString("ddd"))</h3>
+                        <p class="forecast-date">@day.Date.ToString("MMM d")</p>
+                        <span class="forecast-symbol" aria-hidden="true">@GetWeatherSymbol(day.Summary)</span>
+                        <p class="forecast-condition">@day.Summary</p>
+                        <div class="temperatures">
+                            <strong>@FormatTemperature(day.HighC)</strong>
+                            <span>@FormatTemperature(day.LowC)</span>
+                        </div>
+                        <p class="humidity">@day.Humidity% humidity</p>
+                    </article>
+                }
+            </div>
+        </section>
+    }
+
+    <p class="data-note">
+        This starter app generates sample forecasts locally. Connect a weather provider to show live conditions.
+    </p>
+</main>
+
+@code {
+    private string searchCity = "Seattle";
+    private string? errorMessage;
+    private bool useFahrenheit;
+    private WeatherForecastResponse? forecast;
+
+    protected override void OnInitialized()
+    {
+        LoadForecast(searchCity);
+    }
+
+    private void Search()
+    {
+        var city = searchCity.Trim();
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            errorMessage = "Enter a city name to see its forecast.";
+            return;
+        }
+
+        LoadForecast(city);
+    }
+
+    private void LoadForecast(string city)
+    {
+        forecast = WeatherService.GetForecast(city);
+        searchCity = city;
+        errorMessage = null;
+    }
+
+    private void ToggleUnits() => useFahrenheit = !useFahrenheit;
+
+    private string FormatTemperature(int temperatureC)
+    {
+        var temperature = useFahrenheit
+            ? (int)Math.Round(temperatureC * 9d / 5 + 32)
+            : temperatureC;
+        return $"{temperature}°";
+    }
+
+    private static string GetWeatherSymbol(string summary) => summary switch
+    {
+        "Sunny" => "☀",
+        "Partly cloudy" => "⛅",
+        "Cloudy" => "☁",
+        "Light rain" or "Showers" => "🌧",
+        "Snow" => "❄",
+        _ => "🌤"
+    };
+}

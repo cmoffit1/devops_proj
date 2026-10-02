@@ -1,0 +1,84 @@
+.app-shell {
+    min-height: 100vh;
+}
+
+.site-header {
+    align-items: center;
+    border-bottom: 1px solid #e7ecf3;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 1180px;
+    padding: 1.1rem 1.5rem;
+}
+
+.brand {
+    align-items: center;
+    color: #13243a;
+    display: inline-flex;
+    font-size: 1.2rem;
+    font-weight: 750;
+    gap: 0.55rem;
+    letter-spacing: -0.04em;
+    text-decoration: none;
+}
+
+.brand-mark {
+    align-items: center;
+    background: #e8f3ff;
+    border-radius: 0.75rem;
+    color: #2478c7;
+    display: inline-flex;
+    font-size: 1.5rem;
+    height: 2.4rem;
+    justify-content: center;
+    width: 2.4rem;
+}
+
+.api-link {
+    color: #52647a;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.api-link:hover {
+    color: #1768b2;
+}
+
+.page-content {
+    margin: 0 auto;
+    max-width: 1180px;
+    padding: 2rem 1.5rem 4rem;
+}
+
+#blazor-error-ui {
+    color-scheme: light only;
+    background: #fff5db;
+    bottom: 0;
+    box-shadow: 0 -1px 8px rgba(20, 35, 55, 0.12);
+    box-sizing: border-box;
+    display: none;
+    left: 0;
+    padding: 0.8rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+@media (max-width: 600px) {
+    .site-header {
+        padding: 0.9rem 1rem;
+    }
+
+    .page-content {
+        padding: 1.5rem 1rem 3rem;
+    }
+}
