@@ -3,10 +3,9 @@ set -euo pipefail
 
 # Adjust these values. The web app name must be globally unique.
 RESOURCE_GROUP="devops-proj-rg"
-LOCATION="eastus"
 PLAN_NAME="devops-proj-plan"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/app-config.env"
+source "$SCRIPT_DIR/app-config.env"   # provides WEBAPP_NAME and LOCATION
 RUNTIME="DOTNETCORE:10.0"   # .NET 10 (LTS); list options: az webapp list-runtimes --os linux
 
 # Resource group
